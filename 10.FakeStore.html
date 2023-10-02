@@ -84,40 +84,87 @@
         alert(`${data.title} \n Item Added to Cart`)
       })
     }
-    function ShowCart(){
-        document.querySelector("tbody").innerHtml = "";
-        for(var item of CartItems)
-        {
-            var tr=document.createElement("tr");
-            var tdTitle=document.createElement("td");
-            var tdPrice=document.createElement("td");
-            var tdPhoto=document.createElement("td");
-            var tdRemove=document.createElement("td");
+    // function ShowCart(){
+    //     document.querySelector("tbody").innerHtml = "";
+    //     for(var item of CartItems)
+    //     {
+    //         var tr=document.createElement("tr");
+    //         var tdTitle=document.createElement("td");
+    //         var tdPrice=document.createElement("td");
+    //         var tdPhoto=document.createElement("td");
+    //         var tdRemove=document.createElement("td");
 
-            tdTitle.innerHTML = item.title;
-            tdPrice.innerHTML = item.price;
+    //         tdTitle.innerHTML = item.title;
+    //         tdPrice.innerHTML = item.price;
 
-            var img = document.createElement("img");
-            img.width = "50";
-            img.height ="50";
-            img.src = item.image;
+    //         var img = document.createElement("img");
+    //         img.width = "50";
+    //         img.height ="50";
+    //         img.src = item.image;
 
-            tdPhoto.appendChild(img);
+    //         tdPhoto.appendChild(img);
 
-            tdRemove.innerHTML=`
-            <button class="btn btn-outline-danger">
-                <span class="bi bi-trash2-fill"></span>
-            </button>    
-            `
+    //         tdRemove.innerHTML=`
+    //         <button class="btn btn-outline-danger">
+    //             <span class="bi bi-trash2-fill"></span>
+    //         </button>    
+    //         `
 
-            tr.appendChild(tdTitle);
-            tr.appendChild(tdPrice);
-            tr.appendChild(tdPhoto);
-            tr.appendChild(tdRemove);
+    //         tr.appendChild(tdTitle);
+    //         tr.appendChild(tdPrice);
+    //         tr.appendChild(tdPhoto);
+    //         tr.appendChild(tdRemove);
 
-            document.querySelector("tbody").appendChild(tr);
-        }
+    //         document.querySelector("tbody").appendChild(tr);
+    //     }
+    // }
+    function ShowCart() {
+    var cartTableBody = document.querySelector("tbody");
+    cartTableBody.innerHTML = "";  // Clear the table body before displaying the updated cart
+
+    for (var i = 0; i < CartItems.length; i++) {
+        var item = CartItems[i];
+
+        var tr = document.createElement("tr");
+        var tdTitle = document.createElement("td");
+        var tdPrice = document.createElement("td");
+        var tdPhoto = document.createElement("td");
+        var tdRemove = document.createElement("td");
+
+        tdTitle.innerHTML = item.title;
+        tdPrice.innerHTML = item.price;
+
+        var img = document.createElement("img");
+        img.width = "50";
+        img.height = "50";
+        img.src = item.image;
+
+        tdPhoto.appendChild(img);
+
+        var removeButton = document.createElement("button");
+        removeButton.className = "btn btn-outline-danger";
+        removeButton.innerHTML = '<span class="bi bi-trash-fill text-danger"></span>';
+
+        // Add event listener to the trash button to remove the corresponding item and row
+        removeButton.addEventListener("click", (function(index) {
+            return function() {
+                CartItems.splice(index, 1);  // Remove the item from the cart
+                ShowCart();  // Update the cart display
+                GetCartItemsCount();  // Update the cart items count
+            };
+        })(i));
+
+        tdRemove.appendChild(removeButton);
+
+        tr.appendChild(tdTitle);
+        tr.appendChild(tdPrice);
+        tr.appendChild(tdPhoto);
+        tr.appendChild(tdRemove);
+
+        cartTableBody.appendChild(tr);
     }
+}
+
 </script>
 </head>
 <body class="container-fluid" onload="bodyload()">
@@ -136,7 +183,7 @@
             </div>
         </div>
         <div class="col-8">
-            <div id="catalog" class="d-flex overflow-auto flex-wrap" style="height: 500px;">
+            <div id="catalog" class="d-flex overflow-auto flex-wrap" style="height: 90vh;">
 
             </div>
         </div>
